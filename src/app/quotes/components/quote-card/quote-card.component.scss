@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--bg-card);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.quote-card-content {
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.quote-card-author {
+  align-self: flex-end;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
