@@ -9,7 +9,7 @@ import { QuotesService } from '../../quotes.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomQuoteComponent {
-  public quote$ = this.quotesService.random();
+  public quote$ = this._quotesService.random();
 
-  constructor(private readonly quotesService: QuotesService) {}
+  constructor(private readonly _quotesService: QuotesService) {}
 }

@@ -7,9 +7,9 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class QuotesService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly _http: HttpClient) {}
 
   public random(): Observable<Quote> {
-    return this.http.get<Quote>(environment.api + '/random');
+    return this._http.get<Quote>(environment.api + '/random');
   }
 }
