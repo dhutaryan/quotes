@@ -12,6 +12,7 @@ import { Quote } from '../../types';
 })
 export class RandomQuoteComponent implements OnInit {
   public quote$ = new Subject<Quote | null>();
+  public isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(private readonly _quotesService: QuotesService) {}
 
@@ -25,10 +26,14 @@ export class RandomQuoteComponent implements OnInit {
 
   private _fetchQuote(): void {
     this.quote$.next(null);
+    this.isLoading$.next(true);
 
     this._quotesService
       .random()
       .pipe(first())
-      .subscribe((quote) => this.quote$.next(quote));
+      .subscribe({
+        next: (quote) => this.quote$.next(quote),
+        complete: () => this.isLoading$.next(false),
+      });
   }
 }

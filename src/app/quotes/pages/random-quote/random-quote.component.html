@@ -1,4 +1,8 @@
 <qt-quote-card [quote]="quote$ | async" />
-<button class="random-quote-next outlined primary" (click)="nextQuote()">
+<button
+  class="random-quote-next outlined primary"
+  [disabled]="isLoading$ | async"
+  (click)="nextQuote()"
+>
   Next
 </button>

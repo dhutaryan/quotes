@@ -10,6 +10,11 @@
   font-weight: 500;
   letter-spacing: 1.25px;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+  }
 }
 
 @mixin button-outlined($color, $hover, $active) {
@@ -22,6 +27,11 @@
 
   &:active {
     background-color: $active;
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    border: 1px solid var(--border-disabled);
   }
 }
 
