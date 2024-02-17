@@ -1,6 +1,4 @@
-@if (quote$ | async; as quote) {
-  <qt-quote-card [quote]="quote" />
-  <button class="random-quote-next outlined primary" (click)="nextQuote()">
-    Next
-  </button>
-}
+<qt-quote-card [quote]="quote$ | async" />
+<button class="random-quote-next outlined primary" (click)="nextQuote()">
+  Next
+</button>

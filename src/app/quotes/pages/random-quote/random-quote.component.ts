@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Subject, first } from 'rxjs';
+import { BehaviorSubject, Subject, first } from 'rxjs';
 
 import { QuotesService } from '../../quotes.service';
 import { Quote } from '../../types';
@@ -11,7 +11,7 @@ import { Quote } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomQuoteComponent implements OnInit {
-  public quote$ = new Subject<Quote>();
+  public quote$ = new Subject<Quote | null>();
 
   constructor(private readonly _quotesService: QuotesService) {}
 
@@ -24,6 +24,8 @@ export class RandomQuoteComponent implements OnInit {
   }
 
   private _fetchQuote(): void {
+    this.quote$.next(null);
+
     this._quotesService
       .random()
       .pipe(first())

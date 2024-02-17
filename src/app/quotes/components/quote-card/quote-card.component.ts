@@ -9,5 +9,5 @@ import { Quote } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuoteCardComponent {
-  @Input({ required: true }) quote: Quote;
+  @Input({ required: true }) quote: Quote | null;
 }
