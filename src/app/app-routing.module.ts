@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AppLayoutComponent } from './shared/components';
+
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./quotes/quotes.module').then((m) => m.QuotesModule),
+    component: AppLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./quotes/quotes.module').then((m) => m.QuotesModule),
+      },
+    ],
   },
 ];
 
