@@ -1,3 +1,6 @@
-<ng-container *ngIf="quote$ | async as quote">
+@if (quote$ | async; as quote) {
   <qt-quote-card [quote]="quote" />
-</ng-container>
+  <button class="random-quote-next outlined primary" (click)="nextQuote()">
+    Next
+  </button>
+}
