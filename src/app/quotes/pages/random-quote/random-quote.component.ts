@@ -11,7 +11,7 @@ import { Quote } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomQuoteComponent implements OnInit {
-  public quote$ = new Subject<Quote | null>();
+  public quote$ = new BehaviorSubject<Quote | null>(null);
   public isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(private readonly _quotesService: QuotesService) {}
@@ -25,6 +25,7 @@ export class RandomQuoteComponent implements OnInit {
   }
 
   private _fetchQuote(): void {
+    const current = this.quote$.getValue();
     this.quote$.next(null);
     this.isLoading$.next(true);
 
@@ -33,6 +34,7 @@ export class RandomQuoteComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (quote) => this.quote$.next(quote),
+        error: () => this.quote$.next(current),
         complete: () => this.isLoading$.next(false),
       });
   }
