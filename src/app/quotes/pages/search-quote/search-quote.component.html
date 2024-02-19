@@ -1,1 +1,3 @@
-<p>search-quote works!</p>
+@for (quote of (quotes$ | async)?.results; track quote._id) {
+  <qt-quote-card [quote]="quote" />
+}

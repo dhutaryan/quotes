@@ -1,14 +1,22 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
+  min-height: 100%;
   max-width: 60rem;
   margin-inline: auto;
   padding: 1rem;
 }
 
 main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
   width: 100%;
   height: 100%;
+  padding-block: 1rem;
+}
+
+router-outlet {
+  flex: none;
 }
