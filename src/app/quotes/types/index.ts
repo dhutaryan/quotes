@@ -1,2 +1,2 @@
 export * from './quote';
-export * from './pagination';
+export * from './quote-query';

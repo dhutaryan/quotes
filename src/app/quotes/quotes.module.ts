@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { QuotesRoutingModule } from './quotes-routing.module';
 import { RandomQuoteComponent, SearchQuoteComponent } from './pages';
@@ -16,6 +17,7 @@ import { PaginationComponent, SkeletonComponent } from '../shared/components';
     CommonModule,
     SkeletonComponent,
     PaginationComponent,
+    ReactiveFormsModule,
     QuotesRoutingModule,
   ],
 })

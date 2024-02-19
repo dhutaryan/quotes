@@ -25,7 +25,7 @@ export class PaginationComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      if (this.page() > this.totalPages()) {
+      if (this.page() > this.totalPages() && this.totalPages() !== 0) {
         this.pageChange.emit(this.totalPages());
       }
     });

@@ -6,18 +6,21 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 import {
   Observable,
   Subject,
   combineLatest,
+  debounceTime,
   distinctUntilChanged,
   filter,
   map,
+  shareReplay,
   switchMap,
 } from 'rxjs';
 
 import { QuotesService } from '../../quotes.service';
-import { Quote } from '../../types';
+import { Quote, QuoteQuery } from '../../types';
 import { Paginator } from '../../../shared/types';
 
 @Component({
@@ -29,6 +32,9 @@ import { Paginator } from '../../../shared/types';
 export class SearchQuoteComponent implements OnInit {
   public quotes$ = new Subject<Quote[]>();
   public paginator$ = new Subject<Paginator>();
+  public searchControl = new FormControl<string | null>(null);
+
+  private _queryParams$ = this._route.queryParams.pipe(shareReplay());
 
   constructor(
     private readonly _quotesService: QuotesService,
@@ -38,11 +44,40 @@ export class SearchQuoteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const pageNumber$ = this._getPageNumber$();
+    const author = this._route.snapshot.queryParams.author;
+    this.searchControl.patchValue(author, { emitEvent: false });
 
-    combineLatest([pageNumber$])
+    this.searchControl.valueChanges
       .pipe(
-        switchMap(([page]) => this._quotesService.search({ page })),
+        debounceTime(300),
+        map((value) => (value ? value.trim().toLocaleLowerCase() : null)),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this._destroyRef),
+      )
+      .subscribe((author) => {
+        this._goToPage({ page: 1, author });
+      });
+
+    this._fetchQuotesBasedOnQueryParams();
+  }
+
+  public onChangePage(page: number): void {
+    this._goToPage({ page });
+  }
+
+  private _fetchQuotesBasedOnQueryParams(): void {
+    const pageNumber$ = this._getPageNumber$();
+    const author$ = this._queryParams$.pipe(
+      map((params) => params.author),
+      distinctUntilChanged(),
+    );
+
+    combineLatest([pageNumber$, author$])
+      .pipe(
+        debounceTime(0),
+        switchMap(([page, author]) =>
+          this._quotesService.search({ page, author }),
+        ),
         takeUntilDestroyed(this._destroyRef),
       )
       .subscribe((quotes) => {
@@ -54,13 +89,8 @@ export class SearchQuoteComponent implements OnInit {
       });
   }
 
-  public onChangePage(page: number): void {
-    console.log('onChangePage', page);
-    this._goToPage(page);
-  }
-
   private _getPageNumber$(): Observable<number> {
-    return this._route.queryParams.pipe(
+    return this._queryParams$.pipe(
       map((params) => Number(params.page)),
       filter((page) => this._checkPageNumber(page)),
       distinctUntilChanged(),
@@ -69,22 +99,18 @@ export class SearchQuoteComponent implements OnInit {
 
   private _checkPageNumber(pageNumber: number): boolean {
     if (!pageNumber || pageNumber < 1) {
-      this._goToPage(1, true);
+      this._goToPage({ page: 1 }, true);
       return false;
     }
 
     return true;
   }
 
-  private _goToPage(pageNumber: number, replaceUrl = false): Promise<boolean> {
-    const page = this._route.snapshot.queryParams.page;
-    if (page !== pageNumber) {
-      return this._router.navigate(['/quotes', 'search'], {
-        queryParams: { page: pageNumber },
-        replaceUrl: replaceUrl,
-      });
-    }
-
-    return Promise.resolve(false);
+  private _goToPage(params: QuoteQuery, replaceUrl = false): Promise<boolean> {
+    return this._router.navigate(['/quotes', 'search'], {
+      queryParams: params,
+      queryParamsHandling: 'merge',
+      replaceUrl: replaceUrl,
+    });
   }
 }

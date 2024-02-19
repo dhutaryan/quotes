@@ -1,3 +1,9 @@
+<input
+  type="text"
+  placeholder="Search by author"
+  [formControl]="searchControl"
+/>
+
 @for (quote of quotes$ | async; track quote._id) {
   <qt-quote-card [quote]="quote" />
 }
