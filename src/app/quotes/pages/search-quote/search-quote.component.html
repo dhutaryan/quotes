@@ -1,3 +1,11 @@
-@for (quote of (quotes$ | async)?.results; track quote._id) {
+@for (quote of quotes$ | async; track quote._id) {
   <qt-quote-card [quote]="quote" />
+}
+
+@if (paginator$ | async; as paginator) {
+  <qt-pagination
+    [page]="paginator.page"
+    [totalPages]="paginator.totalPages"
+    (pageChange)="onChangePage($event)"
+  />
 }

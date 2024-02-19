@@ -1,9 +1,11 @@
 @use 'sass:color';
 @use 'sass:map';
 
+$height: 2.25rem;
+
 @mixin button-base {
   min-width: 4rem;
-  height: 2.25rem;
+  height: $height;
   padding: 0 1rem;
   border: none;
   border-radius: 0.25rem;
@@ -35,6 +37,22 @@
   }
 }
 
+@mixin button-icon-base($color) {
+  min-width: $height;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  @if $color != null {
+    fill: $color;
+  }
+
+  &:disabled {
+    fill: var(--text-disabled);
+  }
+}
+
 button.outlined {
   @include button-base;
   background-color: transparent;
@@ -45,5 +63,11 @@ button.outlined {
       var(--primary-50),
       var(--primary-100)
     );
+  }
+}
+
+button.icon {
+  &.primary {
+    @include button-icon-base(var(--primary));
   }
 }
