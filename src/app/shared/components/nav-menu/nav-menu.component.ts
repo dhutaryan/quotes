@@ -12,8 +12,12 @@ import { RouterModule } from '@angular/router';
 export class NavMenuComponent {
   public items = [
     {
-      path: '/',
+      path: '/quotes/random',
       name: 'Home',
+    },
+    {
+      path: '/quotes/search',
+      name: 'Search',
     },
   ];
 }

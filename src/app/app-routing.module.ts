@@ -6,10 +6,15 @@ import { AppLayoutComponent } from './shared/components';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: '/quotes/random',
+  },
+  {
+    path: '',
     component: AppLayoutComponent,
     children: [
       {
-        path: '',
+        path: 'quotes',
         loadChildren: () =>
           import('./quotes/quotes.module').then((m) => m.QuotesModule),
       },
@@ -17,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/',
+    redirectTo: '/quotes/random',
   },
 ];
 
