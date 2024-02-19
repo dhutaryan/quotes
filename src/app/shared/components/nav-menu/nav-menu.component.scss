@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  align-self: center;
+  width: max-content;
+  padding: 0.25rem;
+  background-color: var(--bg-card);
+  border-radius: 0.25rem;
+}
+
+ul {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  a {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    padding-inline: 2rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  a:hover {
+    background-color: var(--primary-50);
+  }
+
+  a.active {
+    background-color: var(--primary-100);
+  }
+}

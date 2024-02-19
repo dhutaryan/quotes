@@ -1,0 +1,13 @@
+<ul>
+  @for (item of items; track item.path) {
+    <li>
+      <a
+        routerLinkActive="active"
+        [routerLink]="item.path"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        {{ item.name }}
+      </a>
+    </li>
+  }
+</ul>
