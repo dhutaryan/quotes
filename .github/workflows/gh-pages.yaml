@@ -22,7 +22,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: dist
+          path: dist/quotes
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -33,10 +33,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-          path: dist
+          path: dist/quotes
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist/browser
+          publish_dir: dist/quotes/browser
           enable_jekyll: true
