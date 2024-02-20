@@ -13,7 +13,7 @@ export class NavMenuComponent {
   public items = [
     {
       path: '/quotes/random',
-      name: 'Home',
+      name: 'Random',
     },
     {
       path: '/quotes/search',
