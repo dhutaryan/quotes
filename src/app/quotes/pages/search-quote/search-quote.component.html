@@ -1,3 +1,9 @@
+@if (isError()) {
+  <qt-alert
+    message="Your search request has been failed. Try another search query!"
+  />
+}
+
 <input
   type="text"
   placeholder="Search by author"

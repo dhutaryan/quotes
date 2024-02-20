@@ -18,6 +18,7 @@ import { Quote } from '../../types';
 export class RandomQuoteComponent implements OnInit {
   public quote = signal<Quote | null>(null);
   public isLoading = signal(false);
+  public isError = signal(false);
 
   constructor(private readonly _quotesService: QuotesService) {}
 
@@ -32,13 +33,17 @@ export class RandomQuoteComponent implements OnInit {
   private _fetchQuote(): void {
     const current = this.quote();
     this.isLoading.set(true);
+    this.isError.set(false);
 
     this._quotesService
       .random()
       .pipe(first())
       .subscribe({
         next: (quote) => this.quote.set(quote),
-        error: () => this.quote.set(current),
+        error: () => {
+          this.isError.set(true);
+          this.quote.set(current);
+        },
         complete: () => this.isLoading.set(false),
       });
   }

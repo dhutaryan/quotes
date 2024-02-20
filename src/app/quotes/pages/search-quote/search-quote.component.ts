@@ -35,6 +35,7 @@ export class SearchQuoteComponent implements OnInit {
   public paginator = signal<Paginator | null>(null);
   public searchControl = new FormControl<string | null>(null);
   public isLoading = signal(false);
+  public isError = signal(false);
 
   private _queryParams$ = this._route.queryParams.pipe(shareReplay());
 
@@ -76,6 +77,7 @@ export class SearchQuoteComponent implements OnInit {
 
     combineLatest([pageNumber$, author$])
       .pipe(
+        tap(() => this.isError.set(false)),
         debounceTime(0),
         tap(() => this.isLoading.set(true)),
         switchMap(([page, author]) =>
@@ -83,13 +85,19 @@ export class SearchQuoteComponent implements OnInit {
         ),
         takeUntilDestroyed(this._destroyRef),
       )
-      .subscribe((quotes) => {
-        this.quotes.set(quotes.results);
-        this.paginator.set({
-          page: quotes.page,
-          totalPages: quotes.totalPages,
-        });
-        this.isLoading.set(false);
+      .subscribe({
+        next: (quotes) => {
+          this.quotes.set(quotes.results);
+          this.paginator.set({
+            page: quotes.page,
+            totalPages: quotes.totalPages,
+          });
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isError.set(true);
+          this.isLoading.set(false);
+        },
       });
   }
 

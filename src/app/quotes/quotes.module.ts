@@ -5,7 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { QuotesRoutingModule } from './quotes-routing.module';
 import { RandomQuoteComponent, SearchQuoteComponent } from './pages';
 import { QuoteCardComponent } from './components';
-import { PaginationComponent, SkeletonComponent } from '../shared/components';
+import {
+  AlertComponent,
+  PaginationComponent,
+  SkeletonComponent,
+} from '../shared/components';
 
 @NgModule({
   declarations: [
@@ -18,6 +22,7 @@ import { PaginationComponent, SkeletonComponent } from '../shared/components';
     SkeletonComponent,
     PaginationComponent,
     ReactiveFormsModule,
+    AlertComponent,
     QuotesRoutingModule,
   ],
 })

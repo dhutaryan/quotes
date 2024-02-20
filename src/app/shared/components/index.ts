@@ -3,3 +3,4 @@ export * from './skeleton';
 export * from './nav-menu';
 export * from './pagination';
 export * from './header';
+export * from './alert';
