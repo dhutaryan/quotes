@@ -3,13 +3,13 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {
   Observable,
-  Subject,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
@@ -17,6 +17,7 @@ import {
   map,
   shareReplay,
   switchMap,
+  tap,
 } from 'rxjs';
 
 import { QuotesService } from '../../quotes.service';
@@ -30,9 +31,10 @@ import { Paginator } from '../../../shared/types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchQuoteComponent implements OnInit {
-  public quotes$ = new Subject<Quote[]>();
-  public paginator$ = new Subject<Paginator>();
+  public quotes = signal<Quote[]>(Array(10));
+  public paginator = signal<Paginator | null>(null);
   public searchControl = new FormControl<string | null>(null);
+  public isLoading = signal(false);
 
   private _queryParams$ = this._route.queryParams.pipe(shareReplay());
 
@@ -75,17 +77,19 @@ export class SearchQuoteComponent implements OnInit {
     combineLatest([pageNumber$, author$])
       .pipe(
         debounceTime(0),
+        tap(() => this.isLoading.set(true)),
         switchMap(([page, author]) =>
           this._quotesService.search({ page, author }),
         ),
         takeUntilDestroyed(this._destroyRef),
       )
       .subscribe((quotes) => {
-        this.quotes$.next(quotes.results);
-        this.paginator$.next({
+        this.quotes.set(quotes.results);
+        this.paginator.set({
           page: quotes.page,
           totalPages: quotes.totalPages,
         });
+        this.isLoading.set(false);
       });
   }
 

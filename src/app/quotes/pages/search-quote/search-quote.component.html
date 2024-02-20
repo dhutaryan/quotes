@@ -4,11 +4,11 @@
   [formControl]="searchControl"
 />
 
-@for (quote of quotes$ | async; track quote._id) {
-  <qt-quote-card [quote]="quote" />
+@for (quote of quotes(); track quote?._id) {
+  <qt-quote-card [quote]="quote" [isLoading]="isLoading()" />
 }
 
-@if (paginator$ | async; as paginator) {
+@if (paginator(); as paginator) {
   <qt-pagination
     [page]="paginator.page"
     [totalPages]="paginator.totalPages"

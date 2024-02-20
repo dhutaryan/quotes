@@ -10,4 +10,5 @@ import { Quote } from '../../types';
 })
 export class QuoteCardComponent {
   @Input({ required: true }) quote: Quote | null;
+  @Input() isLoading = false;
 }

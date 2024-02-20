@@ -1,5 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, first } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { first } from 'rxjs';
 
 import { QuotesService } from '../../quotes.service';
 import { Quote } from '../../types';
@@ -11,8 +16,8 @@ import { Quote } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomQuoteComponent implements OnInit {
-  public quote$ = new BehaviorSubject<Quote | null>(null);
-  public isLoading$ = new BehaviorSubject<boolean>(false);
+  public quote = signal<Quote | null>(null);
+  public isLoading = signal(false);
 
   constructor(private readonly _quotesService: QuotesService) {}
 
@@ -25,17 +30,16 @@ export class RandomQuoteComponent implements OnInit {
   }
 
   private _fetchQuote(): void {
-    const current = this.quote$.getValue();
-    this.quote$.next(null);
-    this.isLoading$.next(true);
+    const current = this.quote();
+    this.isLoading.set(true);
 
     this._quotesService
       .random()
       .pipe(first())
       .subscribe({
-        next: (quote) => this.quote$.next(quote),
-        error: () => this.quote$.next(current),
-        complete: () => this.isLoading$.next(false),
+        next: (quote) => this.quote.set(quote),
+        error: () => this.quote.set(current),
+        complete: () => this.isLoading.set(false),
       });
   }
 }
