@@ -1,6 +1,22 @@
+[DEMO](https://dhutaryan.github.io/quotes)
+
 # Quotes
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
+
+## Installation
+
+Run `yarn` to install dependencies.
+There is not any external libraries. Only pure angular, only hardcore 🤟.
+
+## Description
+
+You can find two pages. On the first one you can see random quote, on the second one - a list of quotes with search by author and pagination. Author name should include a full name (backend works so).
+The latest features of Angular were used (like signals, new control flow). As it's a small app, it was unecessary to use any other external libraries.
+
+## Potential improvements
+
+- implementation of a state manager might help making the code cleaner and declarative
 
 ## Development server
 
