@@ -1,4 +1,4 @@
-export interface QuoteQuery {
+export type QuoteQuery = {
   page: number;
   author?: string | null;
-}
+};
