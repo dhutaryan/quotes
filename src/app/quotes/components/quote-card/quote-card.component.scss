@@ -15,8 +15,13 @@
   font-style: italic;
 }
 
+.quote-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .quote-card-author {
-  align-self: flex-end;
   margin: 0;
   font-size: 1.25rem;
 }

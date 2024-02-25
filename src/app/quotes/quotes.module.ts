@@ -9,6 +9,7 @@ import {
   AlertComponent,
   PaginationComponent,
   SkeletonComponent,
+  TwitterShareButtonComponent,
 } from '../shared/components';
 
 @NgModule({
@@ -23,6 +24,7 @@ import {
     PaginationComponent,
     ReactiveFormsModule,
     AlertComponent,
+    TwitterShareButtonComponent,
     QuotesRoutingModule,
   ],
 })

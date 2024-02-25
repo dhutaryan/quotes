@@ -1,0 +1,7 @@
+a {
+  fill: var(--text-secondary);
+
+  &:hover {
+    fill: var(--text);
+  }
+}
