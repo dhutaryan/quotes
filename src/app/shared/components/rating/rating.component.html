@@ -1,0 +1,11 @@
+@for (rating of ratings; track $index) {
+  <input
+    id="{{ uid }}-{{ rating }}"
+    type="radio"
+    hidden
+    [name]="uid"
+    [value]="rating"
+    [formControl]="control"
+  />
+  <label for="{{ uid }}-{{ rating }}" [title]="rating"></label>
+}

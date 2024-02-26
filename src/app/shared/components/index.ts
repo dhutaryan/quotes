@@ -5,3 +5,4 @@ export * from './pagination';
 export * from './header';
 export * from './alert';
 export * from './twitter-share-button';
+export * from './rating';

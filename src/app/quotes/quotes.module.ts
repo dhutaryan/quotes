@@ -8,6 +8,7 @@ import { QuoteCardComponent } from './components';
 import {
   AlertComponent,
   PaginationComponent,
+  RatingComponent,
   SkeletonComponent,
   TwitterShareButtonComponent,
 } from '../shared/components';
@@ -25,6 +26,7 @@ import {
     ReactiveFormsModule,
     AlertComponent,
     TwitterShareButtonComponent,
+    RatingComponent,
     QuotesRoutingModule,
   ],
 })

@@ -1,0 +1,32 @@
+:host {
+  display: flex;
+  flex-direction: row-reverse;
+
+  &:not(:checked) > label {
+    color: #dddddd;
+  }
+
+  & > input:checked ~ label {
+    color: #ffc700;
+  }
+
+  &:not(:checked) > label:hover,
+  &:not(:checked) > label:hover ~ label {
+    color: #deb217;
+  }
+  & > input:checked + label:hover,
+  & > input:checked + label:hover ~ label,
+  & > input:checked ~ label:hover,
+  & > input:checked ~ label:hover ~ label,
+  & > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+  }
+}
+
+label::before {
+  display: inline-block;
+  font-size: 1.25em;
+  color: currentColor;
+  content: '★';
+  cursor: pointer;
+}
