@@ -1,4 +1,6 @@
 export interface Environment {
   production: boolean;
-  api: string;
+  quotableApi: string;
+  quoteGardenApi: string;
+  dummyJsonApi: string;
 }

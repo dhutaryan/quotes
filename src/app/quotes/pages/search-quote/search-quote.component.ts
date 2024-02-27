@@ -21,7 +21,7 @@ import {
 } from 'rxjs';
 
 import { QuotesService } from '../../quotes.service';
-import { Quote, QuoteQuery } from '../../types';
+import { QuoteQuery, QuoteQuotable } from '../../types';
 import { Paginator } from '../../../shared/types';
 
 @Component({
@@ -31,7 +31,7 @@ import { Paginator } from '../../../shared/types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchQuoteComponent implements OnInit {
-  public quotes = signal<Quote[]>(Array(10));
+  public quotes = signal<QuoteQuotable[]>(Array(10));
   public paginator = signal<Paginator | null>(null);
   public searchControl = new FormControl<string | null>(null);
   public isLoading = signal(false);
