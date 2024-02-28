@@ -5,16 +5,19 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {
   Observable,
+  catchError,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
   filter,
+  finalize,
   map,
+  of,
   shareReplay,
   switchMap,
   tap,
@@ -22,7 +25,7 @@ import {
 
 import { QuotesService } from '../../quotes.service';
 import { QuoteQuery, QuoteQuotable } from '../../types';
-import { Paginator } from '../../../shared/types';
+import { Pagination, Paginator } from '../../../shared/types';
 
 @Component({
   selector: 'qt-search-quote',
@@ -31,13 +34,26 @@ import { Paginator } from '../../../shared/types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchQuoteComponent implements OnInit {
-  public quotes = signal<QuoteQuotable[]>(Array(10));
-  public paginator = signal<Paginator | null>(null);
+  private _queryParams$ = this._route.queryParams.pipe(shareReplay());
+  private _data$ = this._fetchQuotesBasedOnQueryParams().pipe(shareReplay());
+
+  public quotes = toSignal(this._data$);
+  public paginator = toSignal(
+    this._data$.pipe(
+      map((quotes) => ({
+        page: quotes.page,
+        totalPages: quotes.totalPages,
+      })),
+    ),
+  );
   public searchControl = new FormControl<string | null>(null);
   public isLoading = signal(false);
-  public isError = signal(false);
-
-  private _queryParams$ = this._route.queryParams.pipe(shareReplay());
+  public isError = toSignal(
+    this._data$.pipe(
+      map(() => false),
+      catchError(() => of(true)),
+    ),
+  );
 
   constructor(
     private readonly _quotesService: QuotesService,
@@ -60,45 +76,30 @@ export class SearchQuoteComponent implements OnInit {
       .subscribe((author) => {
         this._goToPage({ page: 1, author });
       });
-
-    this._fetchQuotesBasedOnQueryParams();
   }
 
   public onChangePage(page: number): void {
     this._goToPage({ page });
   }
 
-  private _fetchQuotesBasedOnQueryParams(): void {
+  private _fetchQuotesBasedOnQueryParams(): Observable<
+    Pagination<QuoteQuotable>
+  > {
     const pageNumber$ = this._getPageNumber$();
     const author$ = this._queryParams$.pipe(
       map((params) => params.author),
       distinctUntilChanged(),
     );
 
-    combineLatest([pageNumber$, author$])
-      .pipe(
-        tap(() => this.isError.set(false)),
-        debounceTime(0),
-        tap(() => this.isLoading.set(true)),
-        switchMap(([page, author]) =>
-          this._quotesService.search({ page, author }),
-        ),
-        takeUntilDestroyed(this._destroyRef),
-      )
-      .subscribe({
-        next: (quotes) => {
-          this.quotes.set(quotes.results);
-          this.paginator.set({
-            page: quotes.page,
-            totalPages: quotes.totalPages,
-          });
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isError.set(true);
-          this.isLoading.set(false);
-        },
-      });
+    return combineLatest([pageNumber$, author$]).pipe(
+      debounceTime(0),
+      tap(() => this.isLoading.set(true)),
+      switchMap(([page, author]) =>
+        this._quotesService
+          .search({ page, author })
+          .pipe(finalize(() => this.isLoading.set(false))),
+      ),
+    );
   }
 
   private _getPageNumber$(): Observable<number> {

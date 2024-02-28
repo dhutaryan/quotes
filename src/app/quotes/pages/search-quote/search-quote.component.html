@@ -10,7 +10,7 @@
   [formControl]="searchControl"
 />
 
-@for (quote of quotes(); track quote?._id) {
+@for (quote of quotes()?.results; track quote?._id) {
   <qt-quote-card [quote]="quote" [isLoading]="isLoading()" />
 }
 
